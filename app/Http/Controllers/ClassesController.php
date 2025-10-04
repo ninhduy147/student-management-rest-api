@@ -6,9 +6,18 @@ use App\Models\Classes;
 use App\Http\Requests\StoreClassesRequest;
 use App\Http\Requests\UpdateClassesRequest;
 use Illuminate\Container\Attributes\Log;
+use Illuminate\Routing\Controllers\HasMiddleware;
+use Illuminate\Routing\Controllers\Middleware;
 
-class ClassesController extends Controller
+class ClassesController extends Controller implements HasMiddleware
 {
+
+    public static function middleware()
+    {
+        return [
+            new Middleware('auth:sanctum',except:['index','show']),
+        ];
+    }
     /**
      * Display a listing of the resource.
      */

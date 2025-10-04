@@ -1,15 +1,31 @@
 <?php
 
-use App\Http\Controllers\ClassesController;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\AuthController;
+use App\Http\Controllers\ClassesController;
+use App\Http\Controllers\SubjectController;
+use App\Http\Middleware\RoleMiddleware;
 
-// Route::get('/user', function (Request $request) {
-//     return $request->user();
-// })->middleware('auth:sanctum');
+//  Auth routes
+Route::post('/register', [AuthController::class, 'register']);
+Route::post('/login',    [AuthController::class, 'login']);
+Route::post('/logout',   [AuthController::class, 'logout'])->middleware('auth:sanctum');
 
-ROUTE::get('/',function (){
-    return 'Hello world';
+
+//  Routes cho ADMIN
+Route::middleware(['auth:sanctum', RoleMiddleware::class . ':admin'])->group(function () {
+    Route::apiResource('classes', ClassesController::class);
+    // Route::apiResource('teachers', TeacherController::class);
 });
 
-Route::apiResource('classes', ClassesController::class);
+
+//  Routes cho TEACHER
+Route::middleware(['auth:sanctum', RoleMiddleware::class . ':teacher'])->group(function () {
+    Route::apiResource('subjects', SubjectController::class);
+});
+
+
+//  Routes cho STUDENT
+// Route::middleware(['auth:sanctum', RoleMiddleware::class . ':student'])->group(function () {
+//     Route::post('/classes/{class}/join', [ClassesController::class, 'join']);
+// });

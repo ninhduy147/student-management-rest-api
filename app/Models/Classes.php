@@ -13,4 +13,16 @@ class Classes extends Model
         'class_code',
         'class_name',
     ];
+
+    protected $table = 'classes';
+
+    public function enrollments()
+    {
+        return $this->hasMany(Enrollment::class);
+    }
+
+    public function subjects()
+    {
+        return $this->hasMany(Subject::class);
+    }
 }
