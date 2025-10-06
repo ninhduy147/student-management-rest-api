@@ -18,6 +18,12 @@ class Student extends Model
         'class_id',
     ];
 
+    public function classes()
+    {
+        return $this->belongsToMany(Classes::class, 'class_student', 'student_id', 'class_id')
+                    ->withTimestamps();
+    }
+
     public function user()
     {
         return $this->belongsTo(User::class);

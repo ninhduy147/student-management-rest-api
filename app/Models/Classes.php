@@ -16,6 +16,12 @@ class Classes extends Model
 
     protected $table = 'classes';
 
+    public function students()
+    {
+        return $this->belongsToMany(Student::class, 'class_student', 'class_id', 'student_id')
+                    ->withTimestamps();
+    }
+
     public function enrollments()
     {
         return $this->hasMany(Enrollment::class);

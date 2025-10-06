@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\ClassesController;
+use App\Http\Controllers\StudentController;
 use App\Http\Controllers\SubjectController;
 use App\Http\Middleware\RoleMiddleware;
 
@@ -15,7 +16,7 @@ Route::post('/logout',   [AuthController::class, 'logout'])->middleware('auth:sa
 //  Routes cho ADMIN
 Route::middleware(['auth:sanctum', RoleMiddleware::class . ':admin'])->group(function () {
     Route::apiResource('classes', ClassesController::class);
-    // Route::apiResource('teachers', TeacherController::class);
+    Route::apiResource('students', StudentController::class);
 });
 
 
