@@ -16,10 +16,10 @@ return new class extends Migration
             $table->foreignId('user_id')->constrained('users')->onDelete('cascade');
             $table->string('student_code')->unique();
             $table->string('full_name');
-            $table->date('birthday');
+            $table->date('birthday')->nullable();
             $table->boolean('gender')->default(1);   // 1 là Nam, 0 là nữ //
 
-            $table->foreignId('class_id')->constrained('classes')->onDelete('cascade');
+            $table->foreignId('class_id')->nullable()->constrained('classes')->onDelete('cascade');
             $table->softDeletes();
             $table->timestamps();
         });

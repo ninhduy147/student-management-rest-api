@@ -5,9 +5,10 @@ namespace App\Http\Controllers;
 use App\Http\Requests\LoginRequest;
 use App\Http\Requests\LogoutRequest;
 use App\Http\Requests\RegisterRequest;
+use App\Models\Student;
 use App\Models\User;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Container\Attributes\Auth;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 
 class AuthController extends Controller
@@ -15,10 +16,18 @@ class AuthController extends Controller
     public function register(RegisterRequest $request)
     {
         $data = $request->validated();
-        $data['password'] = bcrypt($data['password']); // mã hoá mật khẩu
+        $data['password'] = bcrypt($data['password']);
 
-        $user = User::create($data);
-
+        $user = User::create($data)->fresh();;
+        Log::info('Role sau khi fresh:', ['role' => $user->role]);
+        // Thêm vào bảng Student
+        if ($user->role === 'student') {
+            Student::create([
+                'user_id' => $user->id,
+                'full_name' => $user->name,
+                'student_code' => 'STU' . str_pad($user->id, 4, '0', STR_PAD_LEFT)
+            ]);
+        }
         $token = $user->createToken($request->name)->plainTextToken;
 
         return response()->json([
