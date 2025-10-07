@@ -15,6 +15,11 @@ class Subject extends Model
         'teacher_id',
     ];
 
+    public function users()
+    {
+        return $this->belongsTo(User::class,'teacher_id');
+    }
+
     public function class()
     {
         return $this->belongsTo(Classes::class, 'class_id');

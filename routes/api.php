@@ -17,6 +17,7 @@ Route::post('/logout',   [AuthController::class, 'logout'])->middleware('auth:sa
 Route::middleware(['auth:sanctum', RoleMiddleware::class . ':admin'])->group(function () {
     Route::apiResource('classes', ClassesController::class);
     Route::apiResource('students', StudentController::class);
+    Route::apiResource('subjects', SubjectController::class);
 });
 
 

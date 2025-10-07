@@ -9,13 +9,25 @@ class RoleMiddleware
 {
     public function handle(Request $request, Closure $next, ...$roles)
     {
-        if (! $request->user() || ! in_array($request->user()->role, $roles)) {
+        $user = $request->user();
+
+        // Nếu không có user
+        if (! $user) {
             return response()->json([
-                'status' => 403,
-                'message' => 'Bạn không có quyền truy cập'
-            ], 403);
+                'status' => 401,
+                'message' => 'Bạn chưa đăng nhập',
+            ], 401);
         }
 
-        return $next($request);
+        // Cho phép admin truy cập mọi route
+        if ($user->role === 'admin' || in_array($user->role, $roles)) {
+            return $next($request);
+        }
+
+        return response()->json([
+            'status' => 403,
+            'message' => 'Bạn không có quyền truy cập',
+        ], 403);
     }
+
 }

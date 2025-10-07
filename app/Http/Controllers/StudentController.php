@@ -92,7 +92,7 @@ class StudentController extends Controller
     public function update(UpdateStudentRequest $request, $id)
     {
         try {
-            $student = Student::where('id', $id)->whereNull('deleted_at')->first();
+            $student = Student::where('id', $id)->first();
 
             if (!$student) {
                 return response()->json([
@@ -134,14 +134,14 @@ class StudentController extends Controller
     public function destroy($id)
     {
         try {
-           $class = Student::where('id',$id)->whereNull('deleted_at')->first();
-            if(!$class) {
+           $student = Student::where('id',$id)->whereNull('deleted_at')->first();
+            if(!$student) {
                 return response()->json([
                     'status' => 404,
                     'message' => 'Học sinh không tồn tại hoặc đã bị xóa!'
                 ]);
             }
-            $class->delete();
+            $student->delete();
 
              return response()->json([
                 'status' => 200,
