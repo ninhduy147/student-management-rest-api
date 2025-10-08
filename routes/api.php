@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\ClassesController;
+use App\Http\Controllers\EnrollmentController;
 use App\Http\Controllers\GradeController;
 use App\Http\Controllers\StudentController;
 use App\Http\Controllers\SubjectController;
@@ -20,18 +21,21 @@ Route::middleware(['auth:sanctum', RoleMiddleware::class . ':admin'])->group(fun
     Route::apiResource('students', StudentController::class);
     Route::apiResource('subjects', SubjectController::class);
     Route::apiResource('grades', GradeController::class);
+    Route::apiResource('enrollments', EnrollmentController::class);
 });
 
 
 //  Routes cho TEACHER
 Route::middleware(['auth:sanctum', RoleMiddleware::class . ':teacher'])->group(function () {
-    Route::apiResource('subjects', SubjectController::class);
-    Route::apiResource('grades', GradeController::class);
+    Route::apiResource('grades', GradeController::class)->only(['index', 'show', 'store', 'update']);
+    Route::apiResource('subjects', SubjectController::class)->only(['index', 'show', 'store', 'update']);
+
+
 
 });
 
 
 //  Routes cho STUDENT
-// Route::middleware(['auth:sanctum', RoleMiddleware::class . ':student'])->group(function () {
-//     Route::post('/classes/{class}/join', [ClassesController::class, 'join']);
-// });
+Route::middleware(['auth:sanctum', RoleMiddleware::class . ':student'])->group(function () {
+    Route::apiResource('enrollments', EnrollmentController::class)->only(['store']);
+});

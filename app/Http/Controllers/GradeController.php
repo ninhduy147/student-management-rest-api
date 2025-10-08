@@ -34,13 +34,13 @@ class GradeController extends Controller
             'data'    => $grade
         ], 201);
 
-    } catch (\Exception $e) {
-        return response()->json([
-            'status'  => 500,
-            'message' => 'Có lỗi xảy ra khi tạo điểm',
-            'error'   => $e->getMessage()
-        ], 500);
-    }
+        } catch (\Exception $e) {
+            return response()->json([
+                'status'  => 500,
+                'message' => 'Có lỗi xảy ra khi tạo điểm',
+                'error'   => $e->getMessage()
+            ], 500);
+        }
     }
 
     /**
