@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Subject;
 use App\Http\Requests\StoreSubjectRequest;
 use App\Http\Requests\UpdateSubjectRequest;
+use App\Http\Resources\SubjectResource;
 
 class SubjectController extends Controller
 {
@@ -15,22 +16,18 @@ class SubjectController extends Controller
     {
         try {
             $subjects = Subject::select('id', 'teacher_id', 'subject_code', 'subject_name')
-            ->whereHas('users', function ($query) {
-                $query->where('role', 'teacher');
-            })
-            ->with('users')
-            ->get();
+                ->whereHas('users', function ($query) {
+                    $query->where('role', 'teacher');
+                })
+                ->with('users:id,full_name,role') // chỉ lấy vài cột cần thiết
+                ->get();
 
+            return SubjectResource::collection($subjects);
+
+        } catch (\Throwable $e) {
             return response()->json([
-                'status' => 200,
-                'message' => 'Lấy danh sách thành công',
-                'data' => $subjects
-            ]);
-        } catch (\Exception $e) {
-            return response()->json([
-                'status'  => 500,
-                'message' => 'Có lỗi xảy ra',
-                'error'   => $e->getMessage()
+                'status' => 500,
+                'message' => 'Không thể lấy danh sách môn học',
             ], 500);
         }
     }

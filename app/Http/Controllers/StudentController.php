@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Student;
 use App\Http\Requests\StoreStudentRequest;
 use App\Http\Requests\UpdateStudentRequest;
+use App\Http\Resources\StudentResource;
 use Illuminate\Support\Facades\Log;
 
 class StudentController extends Controller
@@ -15,20 +16,12 @@ class StudentController extends Controller
     public function index()
     {
         try {
-            $students = Student::select('id', 'user_id', 'student_code', 'full_name', 'birthday', 'gender', 'class_id')
-                ->with('classes')
-                ->get();
-
+            $students = Student::with('classes:id,class_name')->get();
+            return StudentResource::collection($students);
+        } catch (\Throwable $e) {
             return response()->json([
-                'status' => 200,
-                'message' => 'Lấy danh sách thành công',
-                'data' => $students
-            ]);
-        } catch (\Exception $e) {
-            return response()->json([
-                'status'  => 500,
-                'message' => 'Có lỗi xảy ra',
-                'error'   => $e->getMessage()
+                'status' => 500,
+                'message' => 'Không thể lấy danh sách sinh viên',
             ], 500);
         }
     }

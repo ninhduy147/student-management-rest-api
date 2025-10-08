@@ -24,6 +24,11 @@ class Enrollment extends Model
         return $this->belongsTo(Classes::class, 'class_id');
     }
 
+    public function grade()
+    {
+        return $this->hasOne(Grade::class);
+    }
+
     public function subject()
     {
         return $this->belongsTo(Subject::class);

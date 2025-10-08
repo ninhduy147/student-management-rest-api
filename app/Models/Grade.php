@@ -25,4 +25,9 @@ class Grade extends Model
     {
         return $this->belongsTo(Subject::class);
     }
+
+    public function enrollment()
+    {
+        return $this->belongsTo(Enrollment::class);
+    }
 }

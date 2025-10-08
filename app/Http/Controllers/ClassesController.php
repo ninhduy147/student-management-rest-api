@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Classes;
 use App\Http\Requests\StoreClassesRequest;
 use App\Http\Requests\UpdateClassesRequest;
+use App\Http\Resources\ClassResource;
 use Illuminate\Container\Attributes\Log;
 use Illuminate\Routing\Controllers\HasMiddleware;
 use Illuminate\Routing\Controllers\Middleware;
@@ -23,23 +24,13 @@ class ClassesController extends Controller implements HasMiddleware
      */
     public function index()
     {
-        // return Classes::all();
-        try {
-            $classes = Classes::select('id','class_code','class_name')
-            ->get();
-            return response()->json([
+        $classes = Classes::select('id', 'class_code', 'class_name')->get();
+
+        return ClassResource::collection($classes)
+            ->additional([
                 'status' => 200,
                 'message' => 'Lấy danh sách thành công',
-                'data' => $classes
             ]);
-
-        } catch (\Exception $e) {
-           return response()->json([
-                'status'  => 500,
-                'message' => 'Có lỗi xảy ra',
-                'error'   => $e->getMessage()
-            ], 500);
-        }
     }
 
     /**
